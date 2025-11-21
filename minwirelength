@@ -1,0 +1,37 @@
+import heapq  # Importing the heapq module to use a min-heap (priority queue)
+
+def min_wire_length_prim(n, edges):
+    # Step 1: Build an adjacency list for the graph
+    graph = [[] for _ in range(n)]  # graph[i] will store (weight, neighbor) pairs for node i
+    for u, v, w in edges:
+        graph[u].append((w, v))  # Add edge u -> v with weight w
+        graph[v].append((w, u))  # Add edge v -> u with weight w (undirected graph)
+
+    visited = [False] * n  # To keep track of which nodes are already added to the MST
+    min_heap = [(0, 0)]     # Start with node 0 and weight 0. Format: (weight, node)
+    total_cost = 0          # Store total minimum wire length (MST cost)
+
+    # Step 2: While there are nodes to process in the heap
+    while min_heap:
+        weight, u = heapq.heappop(min_heap)  # Get the edge with the smallest weight
+        if visited[u]:  # If the node is already visited, skip it
+            continue
+        visited[u] = True  # Mark this node as included in MST
+        total_cost += weight  # Add its edge weight to the total cost
+
+        # Step 3: Add all unvisited neighbors to the heap
+        for w, v in graph[u]:
+            if not visited[v]:
+                heapq.heappush(min_heap, (w, v))  # Push (weight, neighbor) to the heap
+
+    return total_cost  # Return the total cost of connecting all bulbs (MST)
+
+# Reading input
+n, m = map(int, input().split())  # n = number of bulbs (nodes), m = number of wires (edges)
+edges = []
+for _ in range(m):
+    u, v, w = map(int, input().split())  # u and v are bulbs, w is wire length between them
+    edges.append((u, v, w))
+
+# Print the minimum wire length needed to connect all bulbs
+print(min_wire_length_prim(n, edges))
