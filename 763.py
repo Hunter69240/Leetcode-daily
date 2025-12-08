@@ -20,7 +20,7 @@ class Solution:
           → So we can "cut" the partition and start a new one.
         • We record the size of each partition.
 
-        ---------------------------------------------------------------------------
+        ---------------------------------------------   i is same as end i append------------------------------
         🔍 HOW THE CODE WORKS (LINE BY LINE)
         ---------------------------------------------------------------------------
         lastIndex = {}                   → dictionary mapping character → last index
