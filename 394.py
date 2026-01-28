@@ -1,4 +1,4 @@
-#Learning : Think of keping value sin stack always of same type to avoid confusion. , Example grouping into tuples when multiple values are to be stored.
+#Learning : Think of keping values in stack always of same type to avoid confusion. , Example grouping into tuples when multiple values are to be stored.
 
 s = "3[a]2[bc]"
 
