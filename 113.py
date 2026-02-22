@@ -5,45 +5,57 @@ from collections import deque
 # -----------------------------------
 class TreeNode(object):
     def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
+        self.val = val        # Node value
+        self.left = left      # Left child
+        self.right = right    # Right child
 
 
 # -----------------------------------
-# Solution Class (Implement here)
+# Solution Class
 # -----------------------------------
 class Solution(object):
     def pathSum(self, root, targetSum):
         """
+        Return all root-to-leaf paths where
+        sum of node values equals targetSum.
+
         :type root: Optional[TreeNode]
         :type targetSum: int
         :rtype: List[List[int]]
         """
-        # Your DFS + backtracking logic here
+
+        # This will store all valid paths
         result = []
-        
+
+        # DFS + Backtracking
         def dfs(node, remaining, path):
-            
+
+            # Base Case: If node is None, stop
             if not node:
-                return 
-            
+                return
+
+            # Step 1: Add current node to path
             path.append(node.val)
-            remaining-=node.val
 
+            # Step 2: Subtract node value from remaining sum
+            remaining -= node.val
+
+            # Step 3: If leaf node AND remaining becomes 0
+            # we found a valid path
             if remaining == 0 and not node.left and not node.right:
-                result.append(path[:])
-            
-            if node.left:
-                dfs(node.left,remaining,path)
-            if node.right:
-                dfs(node.right,remaining,path)
+                result.append(path[:])   # Make a copy of path
 
+            # Step 4: Recurse left and right
+            dfs(node.left, remaining, path)
+            dfs(node.right, remaining, path)
+
+            # Step 5: Backtrack
+            # Remove current node before returning
             path.pop()
-            
-            
-        
+
+        # Initial DFS call
         dfs(root, targetSum, [])
+
         return result
 
 
