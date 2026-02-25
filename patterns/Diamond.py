@@ -1,0 +1,11 @@
+'''
+Docstring for patterns.Diamond
+
+   *
+  ***
+ *****
+*******
+ *****
+  ***
+   *
+'''
