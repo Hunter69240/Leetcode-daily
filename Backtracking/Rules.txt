@@ -4,3 +4,18 @@ Not one, not any — specifically ALL of them.
 You're filling slots one at a time, and what you picked before determines what you can pick next.
 3. Can a partial solution become invalid mid-way, forcing you to abandon it and try something else?
 You need to be able to "undo" a choice and try a different path.
+Decision tree
+Every problem expands into choices at each step → explore all branches (DFS).
+State
+A structure holds the current partial solution and evolves step by step.
+Invariant
+State must be unchanged after the function returns.
+Rule: every change must be undone.
+Core pattern
+Choose (make a change)
+Explore (recurse)
+Undo (revert change)
+Base case
+A complete valid configuration → record it.
+
+Backtracking = controlled state changes + full exploration + exact reversal.
