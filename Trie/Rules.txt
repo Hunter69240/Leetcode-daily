@@ -1,0 +1,36 @@
+1. Is the data composed of strings or sequences of characters/digits?
+   The structure depends on characters at each position.
+
+2. Do multiple inputs share common prefixes?
+   Different entries begin with the same starting characters.
+
+3. Are queries based on prefixes rather than full matches?
+   Search by starting letters, not complete equality.
+
+4. Do you need incremental character-by-character traversal?
+   Processing happens one symbol at a time from left to right.
+
+5. Are repeated prefix computations causing redundancy?
+   Same prefix evaluated many times across inputs.
+
+Decision tree
+Each character leads to a branch → traverse from root following characters.
+
+State
+Current node in tree representing processed prefix.
+
+Invariant
+Path from root to current node equals processed prefix.
+
+Rule
+Move to child node corresponding to next character.
+
+Core pattern
+Insert: walk characters → create nodes if missing → mark end
+Search: walk characters → fail if missing → check end flag
+Prefix: walk characters → existence of node is sufficient
+
+Base case
+All characters processed → node represents complete word or prefix.
+
+Trie = shared prefix nodes + character branching + incremental traversal.
