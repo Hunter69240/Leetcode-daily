@@ -1,5 +1,5 @@
 class Solution:
-    def canPartition(self, nums: List[int]) -> bool:
+    def canPartition(self, nums: list[int]) -> bool:
         # If total sum is odd, it cannot be split into two equal subsets
         if sum(nums) % 2:
             return False
@@ -22,6 +22,7 @@ class Solution:
                 nextDP.add(t)
             # Move to the next dp set
             dp = nextDP
+            
         
         # Final check: whether target sum is achievable
         return True if target in dp else False
