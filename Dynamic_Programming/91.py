@@ -1,81 +1,114 @@
 def a():
     s = "12"
 
-    # dp[i] → number of ways to decode substring starting at index i
-    # size = n + 1 to handle "jump beyond last index" cleanly
+    # Think of it like this:
+    # you are standing at each digit and asking
+    # "how many ways can I decode from HERE to the END?"
+    # dp[i] stores that answer for each position i
     dp = [0 for _ in range(len(s) + 1)]
 
-    # dp[n] = 1
-    # meaning: reaching end = 1 valid decoding (base case)
+    # BASE CASE: you've reached the end (nothing left to decode)
+    # that itself counts as 1 successful decoding
+    # like in climbing stairs → you successfully reached the top
     dp[-1] = 1
 
     n = len(s)
 
-    # iterate from right → left
-    # because dp[i] depends on dp[i+1] and dp[i+2]
+    # we go RIGHT TO LEFT because
+    # to answer "how many ways from position i"
+    # we need to already know "how many ways from i+1 and i+2"
+    # so we solve the end first, then work backwards
     for i in range(n - 1, -1, -1):
-        print(i)
 
-        # CASE 1: take single digit
-        # valid only if current char is not '0'
-        # because '0' cannot be decoded alone
+        # CHOICE 1: take current digit ALONE
+        # example: at '1' in "12" → take just '1' (= A)
+        # remaining string starts at i+1
+        # so add however many ways exist from i+1
+        #
+        # BUT: '0' can never be taken alone (no letter maps to 0)
+        # so skip this choice if current digit is '0'
         if s[i] != '0':
             dp[i] += dp[i + 1]
-            # meaning:
-            # take one step → number of ways = ways from next index
+            #            ↑
+            #    you consumed 1 digit
+            #    so remaining string starts 1 position ahead
 
-        # CASE 2: take two digits
-        # must ensure:
-        # - index exists
-        # - number formed is between 10 and 26
+        # CHOICE 2: take current digit + next digit TOGETHER
+        # example: at '1' in "12" → take '1' and '2' together as 12 (= L)
+        # remaining string starts at i+2
+        # so add however many ways exist from i+2
+        #
+        # BUT two conditions must be true:
+        # condition 1 → i+1 must exist (cant go out of bounds)
+        # condition 2 → the two digits must form a number between 10-26
+        #               starts with '1' → always valid (10-19)
+        #               starts with '2' → only valid if next digit <= '6' (20-26)
+        #               starts with anything else → invalid (would exceed 26)
         if i + 1 < n and (s[i] == '1' or (s[i] == '2' and s[i+1] <= '6')):
             dp[i] += dp[i + 2]
-            # meaning:
-            # take two steps → add ways from i+2
+            #            ↑
+            #    you consumed 2 digits
+            #    so remaining string starts 2 positions ahead
 
-    # dp[0] = total ways from start
     return dp[0]
+    # dp[0] = total ways to decode the entire string
+    # because it answers "how many ways from position 0 to end?"
 
 
-# DRY RUN for "12"
+# ─────────────────────────────────────────
+# DRY RUN for s = "12"
+# ─────────────────────────────────────────
 #
-# s = "12"
-# n = 2
+# initial dp = [0, 0, 1]
+# index:        0  1  2
+#                        ↑ base case: empty string = 1 way
 #
-# dp initially = [0, 0, 1]
-# index:          0  1  2
+# ── i = 1, digit = '2' ──
 #
-# i = 1 → s[1] = '2'
+#   CHOICE 1: take '2' alone
+#   '2' != '0' ✅
+#   dp[1] += dp[2] → dp[1] = 0 + 1 = 1
 #
-# - single digit valid → dp[1] += dp[2] = 1
-# - no two-digit possible
+#   CHOICE 2: take two digits
+#   i+1 = 2, which is NOT < n (2 < 2 is false) ❌
+#   no next digit exists, skip
 #
 # dp = [0, 1, 1]
 #
+# ── i = 0, digit = '1' ──
 #
-# i = 0 → s[0] = '1'
+#   CHOICE 1: take '1' alone
+#   '1' != '0' ✅
+#   dp[0] += dp[1] → dp[0] = 0 + 1 = 1
+#   meaning: take '1' alone, then decode "2" → 1 way
 #
-# - single digit → dp[0] += dp[1] = 1
-# - two digit "12" valid → dp[0] += dp[2] = 1
+#   CHOICE 2: take '1' and '2' together as 12
+#   i+1 = 1 < 2 ✅ and s[0] == '1' ✅
+#   dp[0] += dp[2] → dp[0] = 1 + 1 = 2
+#   meaning: take '12' together, then decode "" → 1 way
 #
 # dp = [2, 1, 1]
 #
+# ─────────────────────────────────────────
+# FINAL ANSWER: dp[0] = 2
 #
-# FINAL:
-# dp[0] = 2
+# the 2 decodings are:
+#   "1","2"  → A, B  → "AB"
+#   "12"     → L     → "L"
 #
-# INTERPRETATION:
-# "12" can be decoded as:
-# "AB" (1,2)
-# "L"  (12)
+# ─────────────────────────────────────────
+# THE ONE QUESTION THAT SOLVES ALL LINEAR DP:
 #
-# CORE IDEA:
+#   "At this position, what are my choices
+#    and where does each choice take me?"
 #
-# At each index i:
-# dp[i] = (ways from i+1 if valid) + (ways from i+2 if valid)
+#   take 1 digit → go to i+1 → add dp[i+1]
+#   take 2 digits → go to i+2 → add dp[i+2]
 #
-# This is counting number of paths from index i to end
-#
+# same exact thinking as climbing stairs:
+#   take 1 step → go to i+1 → add dp[i+1]
+#   take 2 steps → go to i+2 → add dp[i+2]
+# ─────────────────────────────────────────
 print(a())
 
 # class Solution:
