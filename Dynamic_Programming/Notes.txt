@@ -1,0 +1,44 @@
+## Palindrome & String Problem Patterns
+
+## Pattern 1: Center Outward Expand
+When to use: Finding/counting palindrome SUBSTRINGS
+             Characters must be contiguous, no skipping
+Example:     LC 647 - Palindromic Substrings
+Key idea:    Every palindrome has a center
+             Expand outward while both sides match
+             Check BOTH odd (i,i) and even (i,i+1) centers
+Code shape:
+    for i in range(len(s)):
+        expand(i, i)    # odd center
+        expand(i, i+1)  # even center
+
+## Pattern 2: Corners Inward + DP
+When to use: Finding longest palindrome SUBSEQUENCE
+             Can skip characters, have choices to make
+Example:     LC 516 - Longest Palindromic Subsequence
+Key idea:    Look at both corners i and j
+             If match → 2 + solve(i+1, j-1)
+             If no match → max(solve(i+1,j), solve(i,j-1))
+             Store results in memo to avoid recomputation
+Code shape:
+    def solve(i, j):
+        if i > j: return 0
+        if i == j: return 1
+        if s[i] == s[j]:
+            return 2 + solve(i+1, j-1)
+        return max(solve(i+1,j), solve(i,j-1))
+
+## Pattern 3: Sliding Window
+When to use: Contiguous substrings with some condition
+             No skipping, window expands and shrinks
+Example:     LC 340, LC 904
+Key idea:    Maintain a window with left and right pointers
+             Expand right, shrink left when condition breaks
+
+## Decision Tree
+Q1: Can I skip characters?
+    YES → Pattern 2: Corners Inward + DP
+    NO  → Q2: Am I finding palindromes?
+              YES → Pattern 1: Center Outward Expand
+              NO  → Q3: Working with a window/range?
+                        YES → Pattern 3: Sliding Window
