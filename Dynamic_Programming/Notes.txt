@@ -1,44 +1,118 @@
-## Palindrome & String Problem Patterns
+TO REVISIT — solve properly before moving on
+String DP (Edit Distance / Matching)
+LC 5 — Longest Palindromic Substring (interval DP variant, but find actual substring not subsequence)
+LC 72 — Edit Distance (2D DP, i,j represent positions in two strings)
+LC 10 — Regex Matching (2D DP, harder matching with . and *)
+LC 97 — Interleaving String (2D DP, two strings forming a third)
+LC 115 — Distinct Subsequences (2D DP, count ways string t appears in s)
+LCS / LIS Family
+LC 1143 — Longest Common Subsequence (classic 2D DP, foundation for many others)
+LC 300 — Longest Increasing Subsequence (1D DP or binary search variant)
+LC 718 — Maximum Length Repeated Subarray (2D DP, contiguous version of LCS)
+Counting DP
+LC 96 — Unique BSTs (combinatorics DP, Catalan numbers)
+LC 357 — Count Numbers with Unique Digits (digit DP)
+LC 377 — Combination Sum IV (1D DP, order matters unlike knapsack)
+LC 413 — Arithmetic Slices (1D DP, count subarrays)
+LC 494 — Target Sum (knapsack variant, +/- assignment)
+LC 518 — Coin Change II (knapsack, count ways not min coins)
+Stock / State Machine DP
+LC 309 — Best Time to Buy and Sell with Cooldown (state machine DP, 3 states)
+buyandsell — general stock problems (state transitions)
+Interval DP
+LC 32 — Longest Valid Parentheses (stack or DP)
+LC 312 — Burst Balloons (classic interval DP, harder)
+Subarray DP
+LC 53 — Maximum Subarray (Kadane's algorithm)
+LC 152 — Maximum Product Subarray (Kadane's variant, track min and max)
+LC 303 — Range Sum Query (prefix sum, not pure DP but related)
+Harder / Mixed
+LC 139 — Word Break (1D DP + hashset, revisit properly)
+LC 837 — New 21 Game (probability DP)
+LC 1262 — Greatest Sum Divisible by Three (remainder DP)
+LC 2435, LC 3202, LC 3381 — revisit once fundamentals are solid
 
-## Pattern 1: Center Outward Expand
-When to use: Finding/counting palindrome SUBSTRINGS
-             Characters must be contiguous, no skipping
-Example:     LC 647 - Palindromic Substrings
-Key idea:    Every palindrome has a center
-             Expand outward while both sides match
-             Check BOTH odd (i,i) and even (i,i+1) centers
-Code shape:
-    for i in range(len(s)):
-        expand(i, i)    # odd center
-        expand(i, i+1)  # even center
+Suggested order to re-solve these
 
-## Pattern 2: Corners Inward + DP
-When to use: Finding longest palindrome SUBSEQUENCE
-             Can skip characters, have choices to make
-Example:     LC 516 - Longest Palindromic Subsequence
-Key idea:    Look at both corners i and j
-             If match → 2 + solve(i+1, j-1)
-             If no match → max(solve(i+1,j), solve(i,j-1))
-             Store results in memo to avoid recomputation
-Code shape:
-    def solve(i, j):
-        if i > j: return 0
-        if i == j: return 1
-        if s[i] == s[j]:
-            return 2 + solve(i+1, j-1)
-        return max(solve(i+1,j), solve(i,j-1))
+LC 53, 152 — easy wins, Kadane's, builds intuition
+LC 1143, 300 — foundational, many harder problems build on these
+LC 139, 494, 518, 377 — knapsack/counting variants
+LC 72, 5, 115, 97, 10 — string DP, do in this order
+LC 309, buyandsell — state machine
+LC 32, 312 — interval DP harder
+Rest — once all above are solid
 
-## Pattern 3: Sliding Window
-When to use: Contiguous substrings with some condition
-             No skipping, window expands and shrinks
-Example:     LC 340, LC 904
-Key idea:    Maintain a window with left and right pointers
-             Expand right, shrink left when condition breaks
 
-## Decision Tree
-Q1: Can I skip characters?
-    YES → Pattern 2: Corners Inward + DP
-    NO  → Q2: Am I finding palindromes?
-              YES → Pattern 1: Center Outward Expand
-              NO  → Q3: Working with a window/range?
-                        YES → Pattern 3: Sliding Window
+
+Pattern 1: 1D Linear DP
+When to use: Current value depends on 1-2 previous values, moving forward
+Problems: LC 70 (Climbing Stairs), LC 746 (Min Cost Stairs), LC 198 (House Robber), LC 213 (House Robber II), LC 322 (Coin Change)
+Key idea: dp[i] = some function of dp[i-1] and/or dp[i-2]
+Recognition: "how many ways", "min/max cost to reach end", moving left to right, no skipping rows
+
+Pattern 2: Grid DP
+When to use: Moving through a 2D grid, usually top-left to bottom-right
+Problems: LC 62 (Unique Paths), LC 63 (Unique Paths II), LC 64 (Min Path Sum), LC 119 (Pascal's Triangle)
+Key idea: dp[i][j] = dp[i-1][j] + dp[i][j-1] (or min/max variant)
+Recognition: grid input, can only move right/down, count paths or find min cost
+
+Pattern 3: 2D DP on Triangle/Matrix
+When to use: Falling through rows, each cell depends on adjacent cells in previous row
+Problems: LC 120 (Triangle), LC 931 (Min Falling Path Sum)
+Key idea: for each cell, take min of valid neighbors above + current value
+Recognition: triangle or square matrix, top to bottom, answer is min of last row
+Difference: Triangle edges have 1 neighbor (grid narrows), Falling Path edges have 2 (grid is rectangular)
+
+Pattern 4: Knapsack / Subset DP
+When to use: Can you pick elements that sum to a target? Include or exclude each element
+Problems: LC 416 (Partition Equal Subset Sum)
+Key idea: dp[i][j] = can we make sum j using first i elements
+Recognition: "can you partition", "subset that sums to X", binary include/exclude decision
+
+Pattern 5: Sequential String DP
+When to use: Moving forward through a string, current state depends on previous 1-2 positions
+Problems: LC 91 (Decode Ways)
+Key idea: dp[i] = ways to decode s[:i], depends on single digit and two digit combos
+Recognition: string input, counting ways to parse/split/decode, no skipping characters
+
+Pattern 6: Interval DP (Corners Inward)
+When to use: Working on a substring window [i,j], shrinking inward, can skip characters
+Problems: LC 516 (Longest Palindromic Subsequence)
+Key idea: if s[i]==s[j]: 2 + solve(i+1, j-1), else: max(solve(i+1,j), solve(i,j-1))
+Base cases: i > j → 0, i == j → 1
+Recognition: "longest palindromic subsequence", choices at both ends, subsequence = can skip
+
+Pattern 7: Center Expand (Not DP, but string)
+When to use: Finding/counting palindrome substrings, contiguous only, no skipping
+Problems: LC 647 (Palindromic Substrings)
+Key idea: every palindrome has a center, expand outward while both sides match
+Must check both odd center (i,i) and even center (i,i+1)
+Recognition: "palindrome substrings", contiguous characters, count or find all
+
+Pattern 8: Sliding Window
+When to use: Contiguous subarray/substring with some condition, window expands and shrinks
+Problems: LC 643 (Max Average Subarray), LC 340, LC 904
+Key idea: right pointer expands, left pointer shrinks when condition breaks
+Recognition: "contiguous subarray", fixed or variable window size, no skipping
+
+Pattern 9: Greedy
+When to use: Local optimal choice leads to global optimal, no need to explore all options
+Problems: LC 45 (Jump Game II), LC 55 (Jump Game)
+Key idea: at each step take the best available move, trust it leads to optimal
+Recognition: "minimum jumps", "can you reach end", making range-based decisions
+
+## Decision Tree — String / Palindrome Problems only
+## For all other patterns, use input type as first signal
+
+Given a string/palindrome problem:
+Can I skip characters? (subsequence)
+  YES → Interval DP, Pattern 6
+  NO  → Am I finding palindrome substrings?
+            YES → Center Expand, Pattern 7
+            NO  → Is there a variable window condition?
+                      YES → Sliding Window, Pattern 8
+                      NO  → Sequential String DP, Pattern 5
+
+## For non-string problems use input type:
+Array of numbers → Pattern 1, 4, or 9
+Grid/Matrix → Pattern 2 or 3
