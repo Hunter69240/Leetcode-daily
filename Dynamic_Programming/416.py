@@ -95,7 +95,7 @@
 # #         return True if target in dp else False
 
 def a():
-    nums = [1, 2, 5]
+    nums = [1,5,11,5]
 
     target=sum(nums)
     if target %2 !=0:

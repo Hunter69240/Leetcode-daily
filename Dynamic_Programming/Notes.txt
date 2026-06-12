@@ -64,10 +64,18 @@ Recognition: triangle or square matrix, top to bottom, answer is min of last row
 Difference: Triangle edges have 1 neighbor (grid narrows), Falling Path edges have 2 (grid is rectangular)
 
 Pattern 4: Knapsack / Subset DP
-When to use: Can you pick elements that sum to a target? Include or exclude each element
-Problems: LC 416 (Partition Equal Subset Sum)
-Key idea: dp[i][j] = can we make sum j using first i elements
-Recognition: "can you partition", "subset that sums to X", binary include/exclude decision
+
+Variant 1: 0/1 Knapsack
+→ each element used once
+→ LC 416, LC 494
+
+Variant 2: Unbounded Knapsack  
+→ each element unlimited times
+→ LC 518, LC 322
+
+Variant 3: Boolean vs Count
+→ "can you make X?" → boolean
+→ "how many ways?"  → count
 
 Pattern 5: Sequential String DP
 When to use: Moving forward through a string, current state depends on previous 1-2 positions

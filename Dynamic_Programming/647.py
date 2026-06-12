@@ -58,6 +58,9 @@
 # So for every index i, we try BOTH odd and even centers
 # Odd centers  can ONLY find odd  length palindromes
 # Even centers can ONLY find even length palindromes
+'''
+This is Center Expand because the problem asks for substrings (contiguous, no skipping), so I treat every index as a potential center and expand outward while both sides match.
+'''
 
 def countSubstrings(s):
     res = 0

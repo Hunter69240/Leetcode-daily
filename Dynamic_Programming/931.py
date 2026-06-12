@@ -1,3 +1,8 @@
+'''
+This is Falling Path DP (Pattern 3) because I'm falling row by row through a rectangular matrix, each cell depends on 3 neighbors above (top-left, top, top-right), and the answer is the min of the last row.
+'''
+
+
 # def a():
 #     matrix = [[2,1,3],[6,5,4],[7,8,9]]
 

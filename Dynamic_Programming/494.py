@@ -1,29 +1,51 @@
-class Solution:
-    def findTargetSumWays(self, nums: List[int], target: int) -> int:
-        
-        # dp[i] will be a dictionary that maps:
-        #    sum -> number of ways to reach that sum using the first i elements
-        #
-        # We create dp as a list of dictionaries (using defaultdict for convenience),
-        # One dictionary for each "stage" i = 0..len(nums)
-        dp = [defaultdict(int) for _ in range(len(nums) + 1)]
+# class Solution:
+#     def findTargetSumWays(self, nums: List[int], target: int) -> int:
 
-        # Base case:
-        # With 0 numbers, the only achievable sum is 0, and there is exactly 1 way to achieve it
-        dp[0][0] = 1
-    
-        # Build dp table
-        # For each number, we try assigning +num and -num to all previously reachable sums
-        for i in range(len(nums)):
-            # Iterate over all current possible sums at stage i
-            for cur_sum, count in dp[i].items():
-                # If we add nums[i], new sum is cur_sum + nums[i]
-                # Add the number of ways to reach the old sum
-                dp[i + 1][cur_sum + nums[i]] += count
+#         # dp[i] will be a dictionary that maps:
+#         #    sum -> number of ways to reach that sum using the first i elements
+#         #
+#         # We create dp as a list of dictionaries (using defaultdict for convenience),
+#         # One dictionary for each "stage" i = 0..len(nums)
+#         dp = [defaultdict(int) for _ in range(len(nums) + 1)]
 
-                # If we subtract nums[i], new sum is cur_sum - nums[i]
-                dp[i + 1][cur_sum - nums[i]] += count
-        
-        # At the end, dp[len(nums)] contains all achievable sums after using all numbers
-        # We return the number of ways to reach the target sum
-        return dp[len(nums)][target]
+#         # Base case:
+#         # With 0 numbers, the only achievable sum is 0, and there is exactly 1 way to achieve it
+#         dp[0][0] = 1
+
+#         # Build dp table
+#         # For each number, we try assigning +num and -num to all previously reachable sums
+#         for i in range(len(nums)):
+#             # Iterate over all current possible sums at stage i
+#             for cur_sum, count in dp[i].items():
+#                 # If we add nums[i], new sum is cur_sum + nums[i]
+#                 # Add the number of ways to reach the old sum
+#                 dp[i + 1][cur_sum + nums[i]] += count
+
+#                 # If we subtract nums[i], new sum is cur_sum - nums[i]
+#                 dp[i + 1][cur_sum - nums[i]] += count
+
+#         # At the end, dp[len(nums)] contains all achievable sums after using all numbers
+#         # We return the number of ways to reach the target sum
+#         return dp[len(nums)][target]
+
+
+"""This is 0/1 Knapsack because I track index and always move to index+1 — each element is used exactly once."""
+def a():
+    nums = [1,1,1,1,1]
+    target = 100
+    memo={}
+    def recurse(index,current_sum): 
+        if (index,current_sum) in memo :
+            return memo[(index,current_sum)]
+        if index==len(nums):
+            if current_sum==target:
+                return 1
+            else:
+                return 0
+        path1=recurse(index+1,current_sum+nums[index])
+        path2=recurse(index+1,current_sum-nums[index])
+        res=path1+path2
+        memo[(index,current_sum)]=res
+        return res
+    return recurse(0,0)     
+print(a())

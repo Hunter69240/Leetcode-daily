@@ -1,3 +1,7 @@
+'''
+This is Unbounded Knapsack because for every amount I reconsider all coins from scratch — no index tracking means the same coin can contribute multiple times.
+'''
+
 def a():
     # Define the list of coins and the target amount
     nums = [1, 2, 3]

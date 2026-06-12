@@ -1,3 +1,7 @@
+'''
+This is Triangle/Falling Path DP because I'm falling row by row through a triangle, each cell depends on 1-2 adjacent cells in the row above, and the answer is the min of the last row.
+'''
+
 def a():
     triangle = [[2],[3,4],[6,5,7],[4,1,8,3]]
 

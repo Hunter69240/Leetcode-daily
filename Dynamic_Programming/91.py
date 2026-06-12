@@ -160,7 +160,9 @@
 # print(a())
 
 
-
+'''
+This is 1D Linear DP (Climbing Stairs variant) because at each position I have exactly two choices — take 1 digit or take 2 digits — and dp[i] depends only on dp[i-1] and dp[i-2].
+'''
 def a():
     s = "2101"
     
