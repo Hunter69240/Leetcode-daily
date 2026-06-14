@@ -1,44 +1,26 @@
 tiles = "AAABBC"
 
 # Build frequency map manually
-# This stores how many of each tile we can still use
-# A -> 3, B -> 2, C -> 1
 freq = {}
 for ch in tiles:
     if ch in freq:
         freq[ch] += 1
     else:
         freq[ch] = 1
-
-
 def backtrack():
-    # total stores number of valid sequences formed
-    # every time we pick a letter -> we form a new sequence
-    # and then try to extend it further
     total = 0
 
-    # try using every available character
     for ch in freq:
 
-        # skip if no tiles left of this character
         if freq[ch] == 0:
             continue
 
-        # choosing this character creates one new sequence
-        # example:
-        # choose A -> "A"
-        # choose A again -> "AA"
-        # choose B after that -> "AAB"
         total += 1
 
-        # use the tile (reduce available count)
         freq[ch] -= 1
 
-        # extend the sequence further
-        # this recursively builds longer strings
         total += backtrack()
 
-        # restore tile (backtracking step)
         freq[ch] += 1
 
     return total
@@ -47,80 +29,414 @@ def backtrack():
 print(backtrack())
 
 
-"""
-DRY RUN (AAABBC)
+# ------------------------------------------------------------
+# 🔹 WHAT IS THE SUM / PROBLEM ABOUT?
+# ------------------------------------------------------------
+# We are counting all possible non-empty sequences
+# that can be formed using the given tiles.
+#
+# Example:
+#
+# tiles = "AAB"
+#
+# Possible sequences:
+#
+# A
+# B
+# AA
+# AB
+# BA
+# AAB
+# ABA
+# BAA
+#
+# Answer = 8
+#
+# We do NOT need to generate permutations of fixed length.
+#
+# We count every possible sequence of every length.
 
-freq = {A:3, B:2, C:1}
 
-call backtrack()
+# ------------------------------------------------------------
+# 🔹 WHAT TYPE OF PROBLEM IS THIS?
+# ------------------------------------------------------------
+# This is a BACKTRACKING problem.
+#
+# Let’s verify using the 3 key questions:
+#
+# 1. Does it ask for ALL solutions?
+#    ✅ Yes → all possible sequences
+#
+# 2. Do we build the answer piece by piece?
+#    ✅ Yes → one character at a time
+#
+# 3. Can a choice affect future choices?
+#    ✅ Yes → using a tile reduces remaining tiles
+#
+# 👉 Hence: BACKTRACKING
 
---------------------------------
-choose A
-total = 1        -> "A"
-freq {A:2,B:2,C:1}
 
-    choose A
-    total = 1    -> "AA"
-    freq {A:1,B:2,C:1}
+# ------------------------------------------------------------
+# 🔹 WHY USE A FREQUENCY MAP?
+# ------------------------------------------------------------
+#
+# freq stores how many copies of each character
+# are still available.
+#
+# Example:
+#
+# tiles = "AAABBC"
+#
+# freq =
+#
+# {
+#   'A': 3,
+#   'B': 2,
+#   'C': 1
+# }
+#
+# Instead of storing positions,
+# we store remaining counts.
+#
+# This automatically avoids duplicate work.
 
-        choose A
-        total = 1 -> "AAA"
-        freq {A:0,B:2,C:1}
 
-            choose B
-            total = 1 -> "AAAB"
-            freq {A:0,B:1,C:1}
+# ------------------------------------------------------------
+# 🔹 FUNCTION PURPOSE
+# ------------------------------------------------------------
+#
+# backtrack()
+#
+# Returns:
+#
+# Number of sequences that can be formed
+# from the currently available tiles.
+#
+# At every call:
+#
+# Choose a tile
+# →
+# Count the newly formed sequence
+# →
+# Continue extending it
 
-                choose B
-                total = 1 -> "AAABB"
-                freq {A:0,B:0,C:1}
 
-                    choose C
-                    total = 1 -> "AAABBC"
-                    freq {A:0,B:0,C:0}
+# ------------------------------------------------------------
+# 🔹 WHY total = 0 ?
+# ------------------------------------------------------------
+#
+# total stores the number of valid sequences
+# found from the current state.
+#
+# Every recursive call computes its own answer
+# and returns it to its parent.
 
-                    return 1
 
-                return 2
+# ------------------------------------------------------------
+# 🔹 LOOP OVER ALL CHARACTERS
+# ------------------------------------------------------------
+#
+# for ch in freq:
+#
+# Try using every available character.
+#
+# Example:
+#
+# freq =
+#
+# {
+#   A: 2,
+#   B: 1,
+#   C: 1
+# }
+#
+# Possible choices:
+#
+# A
+# B
+# C
 
-            choose C
-            total = 1 -> "AAABC"
 
-        return ...
+# ------------------------------------------------------------
+# 🔹 SKIP UNAVAILABLE CHARACTERS
+# ------------------------------------------------------------
+#
+# if freq[ch] == 0:
+#     continue
+#
+# Example:
+#
+# freq =
+#
+# {
+#   A: 0,
+#   B: 2,
+#   C: 1
+# }
+#
+# Cannot choose A anymore.
+#
+# Skip it.
 
-    choose B
-    total = 1 -> "AAB"
 
-    choose C
-    total = 1 -> "AAC"
+# ------------------------------------------------------------
+# 🔹 WHY total += 1 ?
+# ------------------------------------------------------------
+#
+# Choosing a character immediately creates
+# one new valid sequence.
+#
+# Example:
+#
+# Current sequence:
+#
+# ""
+#
+# Choose A
+#
+# New sequence:
+#
+# "A"
+#
+# Count it.
+#
+# total += 1
+#
+#
+# Later:
+#
+# Current sequence:
+#
+# "AA"
+#
+# Choose B
+#
+# New sequence:
+#
+# "AAB"
+#
+# Count it.
+#
+# total += 1
+#
+#
+# Every choice creates exactly one new sequence.
 
---------------------------------
-choose B
-total += 1 -> "B"
 
-choose C
-total += 1 -> "C"
+# ------------------------------------------------------------
+# 🔹 CHOOSE STEP
+# ------------------------------------------------------------
+#
+# freq[ch] -= 1
+#
+# Use one copy of the chosen character.
+#
+# Example:
+#
+# Before:
+#
+# A:3
+#
+# After choosing A:
+#
+# A:2
+#
+# Remaining tiles decrease.
 
---------------------------------
 
-Each "total += 1" counts:
-A
-AA
-AAA
-AAAB
-AAABB
-AAABBC
-AAB
-AABC
-...
-B
-BA
-...
-C
-CA
-...
+# ------------------------------------------------------------
+# 🔹 EXPLORE STEP
+# ------------------------------------------------------------
+#
+# total += backtrack()
+#
+# After creating a sequence,
+# try extending it further.
+#
+# Example:
+#
+# Current sequence:
+#
+# A
+#
+# Recursive calls explore:
+#
+# AA
+# AB
+# AC
+#
+# and all longer sequences starting from A.
 
-All unique sequences of all lengths are counted.
 
-Final total = 188
-"""
+# ------------------------------------------------------------
+# 🔹 BACKTRACK STEP
+# ------------------------------------------------------------
+#
+# freq[ch] += 1
+#
+# Restore the tile.
+#
+# Example:
+#
+# Before choosing:
+#
+# A:3
+#
+# After choosing:
+#
+# A:2
+#
+# After backtracking:
+#
+# A:3
+#
+# State is restored for the next branch.
+
+
+# ------------------------------------------------------------
+# 🔹 RECURSION TREE (AAB)
+# ------------------------------------------------------------
+#
+# Start
+#
+# ├── A
+# │   ├── A
+# │   │   └── B
+# │   │
+# │   └── B
+# │       └── A
+# │
+# └── B
+#     └── A
+#         └── A
+#
+#
+# Sequences:
+#
+# A
+# AA
+# AAB
+# AB
+# ABA
+# B
+# BA
+# BAA
+
+
+# ------------------------------------------------------------
+# 🔹 DRY RUN (AAABBC)
+# ------------------------------------------------------------
+#
+# freq =
+#
+# {
+#   A:3,
+#   B:2,
+#   C:1
+# }
+#
+#
+# Choose A
+#
+# Count:
+#
+# A
+#
+# Remaining:
+#
+# A:2 B:2 C:1
+#
+#
+# Choose A again
+#
+# Count:
+#
+# AA
+#
+#
+# Choose A again
+#
+# Count:
+#
+# AAA
+#
+#
+# Choose B
+#
+# Count:
+#
+# AAAB
+#
+#
+# Choose B
+#
+# Count:
+#
+# AAABB
+#
+#
+# Choose C
+#
+# Count:
+#
+# AAABBC
+#
+#
+# Backtrack and explore:
+#
+# AAABC
+# AAB
+# AABC
+# AAC
+# AB
+# ABA
+# ...
+#
+#
+# Then start with:
+#
+# B
+#
+# Then:
+#
+# C
+#
+#
+# Every possible sequence is counted exactly once.
+
+
+# ------------------------------------------------------------
+# 🔹 WHY NO DUPLICATES?
+# ------------------------------------------------------------
+#
+# Frequency map treats identical letters
+# as one choice with a count.
+#
+# Example:
+#
+# AAA
+#
+# We do NOT separately choose:
+#
+# A(1)
+# A(2)
+# A(3)
+#
+# We simply choose:
+#
+# A
+#
+# and reduce its count.
+#
+# Therefore duplicate sequences
+# are never generated.
+
+
+# ------------------------------------------------------------
+# ✅ FINAL ANSWER
+# ------------------------------------------------------------
+#
+# tiles = "AAABBC"
+#
+# Total unique sequences = 188
+# ------------------------------------------------------------

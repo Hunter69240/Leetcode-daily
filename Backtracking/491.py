@@ -1,6 +1,35 @@
 nums = [4, 6, 7, 7]
 res = []
 
+def backtracking(cur, index):
+
+    if len(cur) >= 2:
+        res.append(cur[:])
+
+    s = set()
+
+    for i in range(index, len(nums)):
+
+        if nums[i] in s:
+            continue
+
+        elif cur and nums[i] < cur[-1]:
+            continue
+
+        else:
+            s.add(nums[i])
+
+            cur.append(nums[i])
+
+            backtracking(cur, i + 1)
+
+            cur.pop()
+
+backtracking([], 0)
+
+print(res)
+
+
 # ------------------------------------------------------------
 # 🔹 WHAT IS THE SUM / PROBLEM ABOUT?
 # ------------------------------------------------------------
@@ -37,151 +66,163 @@ res = []
 
 
 # ------------------------------------------------------------
-# 🔹 BACKTRACKING FUNCTION
+# 🔹 FUNCTION PARAMETERS
 # ------------------------------------------------------------
-
-def backtracking(cur, index):
-    
-    # --------------------------------------------------------
-    # 🔹 BASE CASE (COLLECT ANSWER)
-    # --------------------------------------------------------
-    if len(cur) >= 2:
-        # If current subsequence has length ≥ 2
-        # → it's a valid answer
-        
-        res.append(cur[:])  
-        # IMPORTANT: use copy (cur[:]) to avoid reference issues
-    
-    
-    # --------------------------------------------------------
-    # 🔹 LOCAL SET FOR DUPLICATE HANDLING
-    # --------------------------------------------------------
-    s = set()
-    # Used to avoid duplicates at SAME recursion level
-    # (important because nums has duplicate 7)
-
-
-    # --------------------------------------------------------
-    # 🔹 TRY ALL CHOICES FROM CURRENT INDEX
-    # --------------------------------------------------------
-    for i in range(index, len(nums)):
-        
-        # ----------------------------------------------------
-        # 🔹 SKIP DUPLICATES (same level)
-        # ----------------------------------------------------
-        if nums[i] in s:
-            # If already used in this level → skip
-            continue
-        
-        
-        # ----------------------------------------------------
-        # 🔹 VALIDATION CHECK (increasing condition)
-        # ----------------------------------------------------
-        elif cur and nums[i] < cur[-1]:
-            # If current number is smaller than last picked
-            # → breaks non-decreasing condition → skip
-            continue
-        
-        
-        # ----------------------------------------------------
-        # 🔹 CHOOSE
-        # ----------------------------------------------------
-        else:
-            s.add(nums[i])
-            # Mark as used in this level
-            
-            cur.append(nums[i])
-            # Add element to current subsequence
-            
-            
-            # ------------------------------------------------
-            # 🔹 EXPLORE
-            # ------------------------------------------------
-            backtracking(cur, i + 1)
-            # Move forward (subsequence → no reuse of same index)
-            
-            
-            # ------------------------------------------------
-            # 🔹 UNDO (BACKTRACK)
-            # ------------------------------------------------
-            cur.pop()
-            # Remove last element to try next possibility
+#
+# cur
+# Current subsequence being built.
+#
+# index
+# Starting position from where we can choose next element.
+#
+# Example:
+#
+# nums = [4,6,7,7]
+#
+# cur = [4,6]
+# index = 2
+#
+# Means:
+# We have already picked 4 and 6.
+# Now we may only choose from:
+#
+# [7,7]
+#  ^
+# index = 2
 
 
-# Start recursion
-backtracking([], 0)
+# ------------------------------------------------------------
+# 🔹 BASE CASE
+# ------------------------------------------------------------
+#
+# if len(cur) >= 2:
+#     res.append(cur[:])
+#
+# Any subsequence of length ≥ 2 is valid.
+#
+# We copy using cur[:] because cur is modified later
+# during backtracking.
 
-print(res)
 
+# ------------------------------------------------------------
+# 🔹 WHY THE SET?
+# ------------------------------------------------------------
+#
+# s = set()
+#
+# Used to prevent duplicate subsequences.
+#
+# Example:
+#
+# nums = [4,6,7,7]
+#
+# From:
+#
+# cur = [4]
+#
+# We can choose:
+#
+# first 7  -> [4,7]
+# second 7 -> [4,7]
+#
+# Same subsequence generated twice.
+#
+# The set ensures that at ONE recursion level
+# a value is used only once.
+#
+# Important:
+#
+# It does NOT prevent:
+#
+# [7,7]
+#
+# because deeper recursive calls create a NEW set.
+
+
+# ------------------------------------------------------------
+# 🔹 VALIDATION CHECK
+# ------------------------------------------------------------
+#
+# elif cur and nums[i] < cur[-1]:
+#
+# Current number is smaller than the last selected number.
+#
+# Example:
+#
+# cur = [4,6]
+#
+# next = 5
+#
+# Gives:
+#
+# [4,6,5]
+#
+# which is not non-decreasing.
+#
+# Therefore skip.
+
+
+# ------------------------------------------------------------
+# 🔹 CHOOSE → EXPLORE → UNDO
+# ------------------------------------------------------------
+#
+# cur.append(nums[i])
+#
+# Choose current number.
+#
+# backtracking(cur, i + 1)
+#
+# Explore all possibilities after choosing it.
+#
+# cur.pop()
+#
+# Undo choice so we can try the next option.
+#
+# This pattern is the heart of backtracking.
 
 
 # ------------------------------------------------------------
 # 🔹 DRY RUN (nums = [4,6,7,7])
 # ------------------------------------------------------------
+#
+# backtracking([],0)
+#
+# ├── 4
+# │   ├── 6
+# │   │   ├── 7
+# │   │   │   └── 7
+# │   │   └── 7
+# │   └── 7
+# │       └── 7
+# ├── 6
+# │   └── 7
+# │       └── 7
+# └── 7
+#     └── 7
+#
+# Valid subsequences collected:
+#
+# [4,6]
+# [4,6,7]
+# [4,6,7,7]
+# [4,7]
+# [4,7,7]
+# [6,7]
+# [6,7,7]
+# [7,7]
 
-# Initial:
-# cur = []
-# index = 0
-# res = []
-
-# CALL backtracking([], 0)
-
-# i = 0 → nums[0] = 4
-# cur = [] → valid
-# s = {4}
-# cur = [4]
-
-# CALL backtracking([4], 1)
-
-# i = 1 → nums[1] = 6
-# 6 >= 4 ✔
-# cur = [4,6]
-# res = [[4,6]]
-
-# CALL backtracking([4,6], 2)
-
-# i = 2 → nums[2] = 7
-# 7 >= 6 ✔
-# cur = [4,6,7]
-# res = [[4,6], [4,6,7]]
-
-# CALL backtracking([4,6,7], 3)
-
-# i = 3 → nums[3] = 7
-# 7 >= 7 ✔
-# cur = [4,6,7,7]
-# res = [[4,6], [4,6,7], [4,6,7,7]]
-
-# BACKTRACK → cur = [4,6,7]
-
-# BACKTRACK → cur = [4,6]
-
-# i = 3 → nums[3] = 7
-# allowed (new level set)
-# cur = [4,6,7]
-# res = [..., [4,6,7]] (duplicate avoided by set)
-
-# BACKTRACK → cur = [4]
-
-# i = 2 → nums[2] = 7
-# cur = [4,7]
-# res = [..., [4,7]]
-
-# i = 3 → nums[3] = 7
-# skipped due to set (duplicate at same level)
-
-# BACKTRACK → cur = []
-
-# i = 1 → nums[1] = 6
-# cur = [6]
-# continue similar...
 
 # ------------------------------------------------------------
-# ✅ FINAL OUTPUT:
+# ✅ FINAL OUTPUT
+# ------------------------------------------------------------
+#
 # [
-#   [4,6], [4,6,7], [4,6,7,7],
-#   [4,7], [4,7,7],
-#   [6,7], [6,7,7],
+#   [4,6],
+#   [4,6,7],
+#   [4,6,7,7],
+#   [4,7],
+#   [4,7,7],
+#   [6,7],
+#   [6,7,7],
 #   [7,7]
 # ]
-# ------------------------------------------------------------
