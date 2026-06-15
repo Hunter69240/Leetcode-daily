@@ -56,6 +56,14 @@ Problems: LC 62 (Unique Paths), LC 63 (Unique Paths II), LC 64 (Min Path Sum), L
 Key idea: dp[i][j] = dp[i-1][j] + dp[i][j-1] (or min/max variant)
 Recognition: grid input, can only move right/down, count paths or find min cost
 
+Pattern 2b: Two-Sequence Comparison DP
+
+Recognition: input = two separate strings/arrays (not one grid)
+Table: dp[i][j] = answer for first i elements of seq1 vs first j elements of seq2, size (len1+1) × (len2+1)
+Inside loop: compare seq1[i-1] vs seq2[j-1] (note the index shift you struggled with today!)
+Examples: Edit Distance (72), LCS (1143), Distinct Subsequences (115), Delete Operation (583)
+vs Pattern 2 (Grid DP): input is one given grid, dp[i][j] reads grid[i][j] directly, no cross-sequence comparison
+
 Pattern 3: 2D DP on Triangle/Matrix
 When to use: Falling through rows, each cell depends on adjacent cells in previous row
 Problems: LC 120 (Triangle), LC 931 (Min Falling Path Sum)
