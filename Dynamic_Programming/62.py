@@ -109,6 +109,8 @@
 #         dp[i][j]=dp[i-1][j]+dp[i][j-1]
 # print(dp[m-1][n-1])
 
+#This is Pattern 2 (Grid DP) because the problem represents movement through a grid from top-left to bottom-right. Each cell depends on the number of ways to reach the cell above and the cell to the left. The 1D array is only a space-optimized representation of the grid DP table.
+
 def a():
     m = 1
     n = 5

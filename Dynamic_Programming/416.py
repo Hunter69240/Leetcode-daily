@@ -94,6 +94,8 @@
 # #         # Final check: whether target sum is achievable
 # #         return True if target in dp else False
 
+
+# This is a 0/1 Knapsack because each number can be used at most once. I keep track of all reachable subset sums in visited. For each number i, I try adding it to every previously reachable sum j to create new reachable sums j+i.
 def a():
     nums = [1,5,11,5]
 

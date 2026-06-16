@@ -98,6 +98,14 @@ Key idea: if s[i]==s[j]: 2 + solve(i+1, j-1), else: max(solve(i+1,j), solve(i,j-
 Base cases: i > j → 0, i == j → 1
 Recognition: "longest palindromic subsequence", choices at both ends, subsequence = can skip
 
+Pattern 6b: Range DP (Pick Last in Window)
+
+Recognition: destroying/merging elements in a range, order matters, result depends on what's done last
+Key idea: try every i in [L,R] as the last operation
+dp(L,R) = max/min over all i as last
+Examples: Burst Balloons (LC 312), Matrix Chain Multiplication, Strange Printer (LC 664)
+
+
 Pattern 7: Center Expand (Not DP, but string)
 When to use: Finding/counting palindrome substrings, contiguous only, no skipping
 Problems: LC 647 (Palindromic Substrings)

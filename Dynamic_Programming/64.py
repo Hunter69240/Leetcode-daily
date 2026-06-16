@@ -1,3 +1,6 @@
+#This is Pattern 2 (Grid DP) because the problem represents movement through a grid from top-left to bottom-right. Each cell depends on the number of ways to reach the cell above and the cell to the left. The 1D array is only a space-optimized representation of the grid DP table.
+
+
 def a():
     grid = [[1,2,3],[4,5,6]]
 

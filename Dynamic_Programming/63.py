@@ -1,3 +1,5 @@
+#This is Pattern 2 (Grid DP) because the problem represents movement through a grid from top-left to bottom-right. Each cell depends on the number of ways to reach the cell above and the cell to the left. The 1D array is only a space-optimized representation of the grid DP table.
+
 def a():
     obstacleGrid = [
     [0,0,0],
@@ -5,7 +7,7 @@ def a():
     [0,0,0]
     ]
     m=len(obstacleGrid)
-    n=len(obstacleGrid[0))
+    n=len(obstacleGrid[0])
 
     dp=[[0]*n for _ in range(m)]
 
