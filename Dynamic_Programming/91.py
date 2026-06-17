@@ -165,7 +165,7 @@ This is 1D Linear DP (Climbing Stairs variant) because at each position I have e
 '''
 def a():
     s = "2101"
-    
+    931
     n=len(s)
     
     prev1=1
