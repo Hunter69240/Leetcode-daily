@@ -1,3 +1,5 @@
+# Whenever palindrome always think about current character being center and expand and find palindrome and there r always 2 kinds of palindrome which are odd and even and for each character consider odd and even and do a check
+
 class Solution:
     def longestPalindrome(self, s: str) -> str:
         # Variables to store the result palindrome and its length
