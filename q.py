@@ -1,14 +1,7 @@
 def a():
-    nums  = [-1,2,3]
-    
-    nums=set(nums)
-    print("Set",nums)
-    if len(nums)>2:
-        nums=list(nums)
-        nums.sort()
-        return (nums[len(nums)-3])
-    else:
-        return max(nums)
-    
+    nums = [3,1,4,2]
+    p = 6
+    if sum(nums) % p == 0:
+        return 0
 
 print(a())

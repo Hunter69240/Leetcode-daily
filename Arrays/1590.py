@@ -1,3 +1,10 @@
+# We want to delete a chunk whose sum leaves remainder `remain` (mod p).
+# Trick: keep a running total as we scan. If two points in the scan
+# have running totals that differ by exactly `remain` (mod p),
+# everything between those two points is the chunk we'd delete.
+# So at each step, check: "have I seen a running total that is
+# (today's total - remain) before?" If yes, that gap is a candidate.
+
 class Solution:
     def minSubarray(self, nums: List[int], p: int) -> int:
         # 📌 PROBLEM TYPE:
